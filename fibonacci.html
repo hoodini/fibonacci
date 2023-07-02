@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>Fibonacci Cipher</title>
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 500px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-check-label {
+            margin-right: 10px;
+        }
+        #result {
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Fibonacci Cipher</h1>
+        <form id="cipherForm">
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <input type="text" id="message" name="message" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="language">Language:</label>
+                <select name="language" id="language" class="form-control">
+                    <option value="hebrew" selected>Hebrew</option>
+                    <option value="english">English</option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="col-6 form-check">
+                    <input type="radio" id="encrypt" name="operation" value="encrypt" class="form-check-input" checked>
+                    <label for="encrypt" class="form-check-label">Encrypt</label>
+                </div>
+                <div class="col-6 form-check">
+                    <input type="radio" id="decrypt" name="operation" value="decrypt" class="form-check-input">
+                    <label for="decrypt" class="form-check-label">Decrypt</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3 btn-block">Submit</button>
+        </form>
+        <h3 class="mt-4">Result:</h3>
+        <p id="result"></p>
+        <button id="copyButton" class="btn btn-secondary btn-block">Copy to Clipboard</button>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        const englishAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const hebrewAlphabet = 'אבגדהוזחטיכלמנסעפצקרשת';
+        const fibonacciSequence = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
+
+        function encrypt(message, language) {
+            const alphabet = language === 'english' ? englishAlphabet : hebrewAlphabet;
+            return message.toUpperCase().split("").map((char, index) => {
+                const originalIndex = alphabet.indexOf(char);
+                if (originalIndex !== -1) {
+                    const encryptedIndex = (originalIndex + fibonacciSequence[index + 1]) % alphabet.length; // add 1 to Fibonacci index to skip the first zero
+                    return alphabet[encryptedIndex];
+                } else {
+                    return char; // return original character if it's not in the alphabet
+                }
+            }).join("");
+        }
+
+        function decrypt(message, language) {
+            const alphabet = language === 'english' ? englishAlphabet : hebrewAlphabet;
+            return message.toUpperCase().split("").map((char, index) => {
+                const encryptedIndex = alphabet.indexOf(char);
+                if (encryptedIndex !== -1) {
+                    const originalIndex = (encryptedIndex - fibonacciSequence[index + 1] + alphabet.length) % alphabet.length; // add alphabet.length before mod to handle negative numbers
+                    return alphabet[originalIndex];
+                } else {
+                    return char; // return original character if it's not in the alphabet
+                }
+            }).join("");
+        }
+
+        document.getElementById('cipherForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var message = document.getElementById('message').value;
+            var operation = document.querySelector('input[name="operation"]:checked').value;
+            var language = document.getElementById('language').value;
+            var result = "";
+            if (operation === 'encrypt') {
+                result = encrypt(message, language);
+            } else if (operation === 'decrypt') {
+                result = decrypt(message, language);
+            }
+            document.getElementById('result').innerText = result;
+        });
+
+        document.getElementById('copyButton').addEventListener('click', function() {
+            navigator.clipboard.writeText(document.getElementById('result').innerText);
+        });
+    </script>
+</body>
+</html>
