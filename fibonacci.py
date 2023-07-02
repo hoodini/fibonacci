@@ -7,14 +7,14 @@ fibonacci_sequence = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
 def encrypt(message, language):
     alphabet = english_alphabet if language == 'english' else hebrew_alphabet
     return ''.join(
-        alphabet[(alphabet.index(char.upper()) + fibonacci_sequence[index + 1]) % len(alphabet)] if char.upper() in alphabet else char
+        alphabet[(alphabet.index(char.upper()) + fibonacci_sequence[(index + 1) % len(fibonacci_sequence)]) % len(alphabet)] if char.upper() in alphabet else char
         for index, char in enumerate(message)
     )
 
 def decrypt(message, language):
     alphabet = english_alphabet if language == 'english' else hebrew_alphabet
     return ''.join(
-        alphabet[(alphabet.index(char.upper()) - fibonacci_sequence[index + 1] + len(alphabet)) % len(alphabet)] if char.upper() in alphabet else char
+        alphabet[(alphabet.index(char.upper()) - fibonacci_sequence[(index + 1) % len(fibonacci_sequence)] + len(alphabet)) % len(alphabet)] if char.upper() in alphabet else char
         for index, char in enumerate(message)
     )
 
