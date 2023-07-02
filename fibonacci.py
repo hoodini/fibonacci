@@ -18,15 +18,15 @@ def decrypt(message, language):
         for index, char in enumerate(message)
     )
 
-st.markdown("# Fibonacci Cipher by Yuval Avidani @hackit.co.il")
+st.markdown("# Yuval's Fibonacci Cipher")
 
 message = st.text_input('Enter your message here')
 language = st.selectbox('Select language', ['hebrew', 'english'])
 
 if st.button('Encrypt'):
     result = encrypt(message, language)
-    st.write('Encrypted message:', result)
+    st.text_input('Encrypted message:', result)
 
 if st.button('Decrypt'):
     result = decrypt(message, language)
-    st.write('Decrypted message:', result)
+    st.text_input('Decrypted message:', result)
